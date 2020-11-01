@@ -28,8 +28,8 @@ exports.viewSingle = async function (req, res) {
 
 exports.viewEditScreen = async function (req, res) {
     try {
-        let post = await Post.findSingleById(req.params.id)
-        if (post.authorId == req.visitorId) {
+        let post = await Post.findSingleById(req.params.id, req.visitorId)
+        if (post.isVisitorOwner) {
             res.render('edit-post', { post: post })
         } else {
             req.flash("errors", "External users don't have permission to edit other users' posts")
