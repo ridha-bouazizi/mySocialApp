@@ -22,7 +22,7 @@ Post.prototype.cleanUp = function () {
 
     this.data = {
         title: sanitizeHTML(this.data.title.trim(), { allowedTags: [], allowedAttributes: {} }),
-        body: sanitizeHTML(this.data.body.trim(), { allowedTags: [], allowedAttributes: {} }),
+        body: sanitizeHTML(this.data.body.trim(), { allowedTags: false, allowedAttributes: false }),
         createdDate: new Date(),
         author: ObjectID(this.userId)
     }

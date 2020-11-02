@@ -24,5 +24,14 @@
     $('[data-toggle="tooltip"]').tooltip();
   </script>
   <script src="/main-bundled.js"></script>
+
+  <!-- Include the Quill library -->
+<script src="http://quilljs.com/js/quill.js"></script>
+<!-- Initialize Quill editor -->
+<script>
+  var editor = new Quill('#editor');
+  editor.addModule('toolbar', { container: '#toolbar' });
+</script>
+
 </body>
 </html>
