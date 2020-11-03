@@ -20,7 +20,7 @@ app.use(flash())
 app.use(function (req, res, next) {
     //make our makdown available from within ejs templates
     res.locals.filterUserHTML = function (content) {
-        return sanitizeHTML(markdown(content), { allowedTags: ['p', 'br', 'ul', 'li', 'strong', 'bold', 'i', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'], allowedAttributes: {} })
+        return sanitizeHTML(markdown(content), { allowedTags: false, allowedAttributes: false })
     }
 
     //make all error and success flash messages available from all templates
