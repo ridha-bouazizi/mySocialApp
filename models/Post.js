@@ -21,7 +21,7 @@ Post.prototype.cleanUp = function () {
     //get rid of malicious properties
 
     this.data = {
-        title: sanitizeHTML(this.data.title.trim(), { allowedTags: [], allowedAttributes: {} }),
+        title: sanitizeHTML(this.data.title.trim(), { allowedTags: false, allowedAttributes: false }),
         body: sanitizeHTML(this.data.body.trim(), { allowedTags: false, allowedAttributes: false }),
         createdDate: new Date(),
         author: ObjectID(this.userId)
