@@ -3,10 +3,12 @@ const router = express.Router()
 const userController = require('./controllers/userController')
 const postController = require('./controllers/postController')
 const followController = require('./controllers/followController')
+const mailController = require('./controllers/mailController')
 
 //user related routes
 router.get('/', userController.home)
-router.post('/register', userController.register)
+router.post('/register', userController.register, mailController.sendConfirmationEmail)
+//router.get('/confirmation')
 router.post('/login', userController.login)
 router.post('/logout', userController.logout)
 

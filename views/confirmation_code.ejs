@@ -1,0 +1,24 @@
+<%- include('includes/header') %>
+<!-- header ends here -->
+  
+<body>
+    <div class="newsletter-subscribe">
+        <div class="container">
+            <div class="intro">
+                <h2 class="text-center">Account Confirmation</h2>
+                <div class="alert alert-info" role="alert"><span class="text-center d-lg-flex justify-content-lg-center"><strong>Please enter the confirmation code we have sent you over at the email address : this@this.this</strong></span></div>
+                <div class="alert alert-light text-black-50" role="alert"><span><strong>The confirmation code was sent to your inbox, if you don't seem to find it, please consider checking your spam folder.</strong><br></span></div>
+            </div>
+            <form class="form-inline" method="post" style="align-content: right;justify-content: center;">
+                <div class="form-group"><input class="form-control" type="text" name="code" placeholder="Your code"></div>
+                <div class="form-group">
+                    <div class="btn-group" role="group"><button class="btn btn-primary d-lg-flex justify-content-lg-start" type="submit">Confirm</button><button class="btn btn-light btn-sm action-button" type="submit">Resend</button></div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="../public/jquery.min.js"></script>
+    <script src="../public/bootstrap.min.js"></script>
+</body>
+  
+  <%- include('includes/footer')%>

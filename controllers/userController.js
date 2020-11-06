@@ -1,7 +1,5 @@
-const session = require('express-session')
 const User = require('../models/User')
 const Post = require('../models/Post')
-const { post } = require('../router')
 const Follow = require('../models/Follow')
 
 exports.sharedProfileData = async function (req, res, next) {
@@ -58,13 +56,14 @@ exports.logout = function (req, res) {
     })
 }
 
-exports.register = function (req, res) {
+exports.register = function (req, res, next) {
     let user = new User(req.body)
     user.register().then(() => {
-        req.session.user = { username: user.data.username, avatar: user.avatar, _id: user.data._id }
-        req.session.save(function () {
-            res.redirect('/')
-        })
+        req.session.user = { username: user.data.username, email: user.data.email, avatar: user.avatar, _id: user.data._id, confirmationRequired: true }
+        req.session.save(/* function () {
+            res.redirect('/sendEmailConfirmation')
+        } */)
+        next()
     }).catch((regErrors) => {
         regErrors.forEach(function (error) {
             req.flash('regErrors', error)

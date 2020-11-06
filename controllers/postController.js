@@ -1,5 +1,4 @@
 const Post = require('../models/Post')
-const { post } = require('../mySocialApp')
 
 exports.viewCreateScreen = function (req, res) {
     res.render('create-post')

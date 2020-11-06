@@ -29,7 +29,8 @@ User.prototype.cleanUp = function () {
     this.data = {
         username: this.data.username.trim().toLowerCase(),
         email: this.data.email.trim().toLowerCase(),
-        password: this.data.password
+        password: this.data.password,
+        passwordConfirmation: this.data.passwordConfirmation
     }
 };
 
@@ -39,7 +40,7 @@ User.prototype.validate = function () {
             this.errors.push("You must provide a username.");
         }
         if (this.data.username != "" && !validator.isAlphanumeric(this.data.username)) {
-            this.errors.push("username must be alphanumeric.");
+            this.errors.push("Username must be alphanumeric.");
         }
         if (!validator.isEmail(this.data.email)) {
             this.errors.push("You must provide a valid email.");
@@ -48,29 +49,32 @@ User.prototype.validate = function () {
             this.errors.push("You must provide a password.");
         }
         if (this.data.password.length > 0 && this.data.password.length < 12) {
-            this.errors.push("password must be at least 12 caracters");
+            this.errors.push("Password must be at least 12 caracters");
         }
         if (this.data.password.length > 50) {
-            this.errors.push("password can't exceed 50 caracters");
+            this.errors.push("Password can't exceed 50 caracters");
+        }
+        if (this.data.password !== this.data.passwordConfirmation) {
+            this.errors.push("invalid password confirmation")
         }
         if (this.data.username.length > 0 && this.data.username.length < 3) {
-            this.errors.push("username must be at least 3 caracters");
+            this.errors.push("Username must be at least 3 caracters");
         }
         if (this.data.username.length > 30) {
-            this.errors.push("password can't exceed 30 caracters");
+            this.errors.push("Password can't exceed 30 caracters");
         }
-    
+
         //OnlyIf username is valid then check to see if it's already taken
-        if (this.data.username.length>2 && this.data.username.length<31 && validator.isAlphanumeric(this.data.username)) {
-            let usernameExists=await usersCollection.findOne({username: this.data.username})
+        if (this.data.username.length > 2 && this.data.username.length < 31 && validator.isAlphanumeric(this.data.username)) {
+            let usernameExists = await usersCollection.findOne({ username: this.data.username })
             if (usernameExists) {
                 this.errors.push("That username is already taken.")
             }
         }
-    
+
         //OnlyIf email is valid then check to see if it's already taken
         if (validator.isEmail(this.data.email)) {
-            let emailExists=await usersCollection.findOne({email: this.data.email})
+            let emailExists = await usersCollection.findOne({ email: this.data.email })
             if (emailExists) {
                 this.errors.push("That email address is already being used.")
             }
@@ -84,7 +88,7 @@ User.prototype.login = function () {
         this.cleanUp()
         usersCollection.findOne({ username: this.data.username }).then((attemptedUser) => {
             if (attemptedUser && bcrypt.compareSync(this.data.password, attemptedUser.password)) {
-                this.data=attemptedUser
+                this.data = attemptedUser
                 this.getAvatar()
                 resolve("congrats")
             } else {
@@ -108,6 +112,7 @@ User.prototype.register = function () {
             let salt = bcrypt.genSaltSync(10)
             this.data.password = bcrypt.hashSync(this.data.password, salt)
             //store the data
+            this.data.confirmationRequired = true
             await usersCollection.insertOne(this.data)
             this.getAvatar()
             resolve()
@@ -123,17 +128,17 @@ User.prototype.getAvatar = function () {
 
 User.findByUsername = function (username) {
     return new Promise(function (resolve, reject) {
-        if (typeof(username)!="string") {
+        if (typeof (username) != "string") {
             reject()
             return
         }
-        usersCollection.findOne({username:username}).then(function (userDoc) {
+        usersCollection.findOne({ username: username }).then(function (userDoc) {
             if (userDoc) {
                 userDoc = new User(userDoc, true)
                 userDoc = {
-                    _id : userDoc.data._id,
-                    username : userDoc.data.username,
-                    avatar : userDoc.avatar
+                    _id: userDoc.data._id,
+                    username: userDoc.data.username,
+                    avatar: userDoc.avatar
                 }
                 resolve(userDoc)
             } else {
