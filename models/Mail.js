@@ -2,6 +2,8 @@ const session = require('express-session')
 const nodemailer = require('nodemailer')
 const Mailgen = require('mailgen');
 const mailgun = require("mailgun-js")
+const encrypt = require('./crypto').encrypt
+const ObjectID = require('mongodb').ObjectID
 const dotenv = require('dotenv')
 dotenv.config()
 
@@ -42,6 +44,7 @@ let Mail = function (req, res, operation) {
 
 Mail.prototype.prepareEmail = function (username, id, operation) {
     if (operation === "confirmation") {
+        id = encrypt(new ObjectID(id).toString())
         return {
             body: {
                 name: username,
@@ -51,7 +54,7 @@ Mail.prototype.prepareEmail = function (username, id, operation) {
                     button: {
                         color: '#22BC66', // Optional action button color
                         text: 'Confirm your account',
-                        link: process.env.APP_DOMAIN.concat('confirm/', id)
+                        link: process.env.APP_DOMAIN.concat('confirm/', id.iv, '/', id.content)
                     }
                 },
                 outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'

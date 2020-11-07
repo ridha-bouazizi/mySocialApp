@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs')
 const usersCollection = require('../db').db().collection("users")
 const validator = require("validator");
 const md5 = require('md5')
+const ObjectID = require('mongodb').ObjectID
 
 let User = function (data, getAvatar) {
     this.data = data;
@@ -155,6 +156,17 @@ User.findByUsername = function (username) {
         }).catch(function () {
             reject()
         })
+    })
+}
+
+User.prototype.confirmEmail = function (id) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await usersCollection.findOneAndUpdate({ _id: new ObjectID(id) }, { $set: { confirmationRequired: false } })
+            resolve("success")
+        } catch {
+            reject("failure")
+        }
     })
 }
 

@@ -7,5 +7,5 @@ exports.sendConfirmationEmail = function (req, res) {
 
     mail.sendEmail(mail)
 
-    res.render('confirmation_code.ejs')
+    res.render('confirmation_code.ejs', { email: req.session.user.email })
 }

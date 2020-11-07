@@ -1,6 +1,7 @@
 const User = require('../models/User')
 const Post = require('../models/Post')
 const Follow = require('../models/Follow')
+const { encrypt, decrypt } = require('../models/crypto')
 
 exports.sharedProfileData = async function (req, res, next) {
     let isFollowing = false
@@ -79,9 +80,16 @@ exports.register = function (req, res, next) {
 
 exports.home = async function (req, res) {
     if (req.session.user) {
-        // fetch feed of posts for current user
-        let posts = await Post.getFeed(req.session.user._id)
-        res.render('home-dashboard', { posts: posts })
+        if (req.session.user.confirmationRequired) {
+            req.flash("errors", "Please consider confirming your email address.")
+            req.session.save(function () {
+                res.render('confirmation_code', { email: req.session.user.email })
+            })
+        } else {
+            // fetch feed of posts for current user
+            let posts = await Post.getFeed(req.session.user._id)
+            res.render('home-dashboard', { posts: posts })
+        }
     } else {
         res.render('home-guest', { regErrors: req.flash('regErrors') })
     }
@@ -96,6 +104,26 @@ exports.checkForEmailConfirmation = function (req, res, next) {
     } else {
         next()
     }
+}
+
+// try to confirm mail address
+exports.tryConfirm = function (req, res) {
+    let hash = {
+        iv: req.params.iv,
+        content: req.params.content
+    }
+    let user = new User()
+    user.confirmEmail(decrypt(hash)).then(() => {
+        req.flash("success", "Congratulations, you have just confirmed your email.")
+        res.redirect('/')
+        console.log("validation successful")
+    }
+    ).catch(() => {
+        req.flash("errors", "Sorry, we were unable to confirm your account.")
+        res.redirect('/')
+        console.log("validation successful")
+    }
+    )
 }
 
 

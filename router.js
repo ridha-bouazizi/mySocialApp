@@ -6,11 +6,12 @@ const followController = require('./controllers/followController')
 const mailController = require('./controllers/mailController')
 
 //user related routes
-router.get('/', userController.checkForEmailConfirmation, userController.home)
-router.post('/register', userController.checkForEmailConfirmation, userController.register, mailController.sendConfirmationEmail)
-router.get('/confirm/:confirmToken')
-router.post('/login', userController.checkForEmailConfirmation, userController.login)
-router.post('/logout', userController.checkForEmailConfirmation, userController.logout)
+router.get('/', userController.home)
+router.post('/register', userController.register, mailController.sendConfirmationEmail)
+router.get('/confirm/:iv/:content', userController.tryConfirm)
+router.post('/confirm/resend', mailController.sendConfirmationEmail)
+router.post('/login', userController.login)
+router.post('/logout', userController.logout)
 
 //post related routes
 router.get('/create-post', userController.checkForEmailConfirmation, userController.mustBeLoggedIn, postController.viewCreateScreen)
