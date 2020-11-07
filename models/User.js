@@ -113,6 +113,14 @@ User.prototype.register = function () {
             this.data.password = bcrypt.hashSync(this.data.password, salt)
             //store the data
             this.data.confirmationRequired = true
+            this.data.dateAdded = new Date()
+            this.data = {
+                username: this.data.username,
+                email: this.data.email,
+                password: this.data.password,
+                dateAdded: this.data.dateAdded,
+                confirmationRequired: this.data.confirmationRequired
+            }
             await usersCollection.insertOne(this.data)
             this.getAvatar()
             resolve()

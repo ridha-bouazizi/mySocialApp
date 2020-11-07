@@ -6,28 +6,28 @@ const followController = require('./controllers/followController')
 const mailController = require('./controllers/mailController')
 
 //user related routes
-router.get('/', userController.home)
-router.post('/register', userController.register, mailController.sendConfirmationEmail)
-//router.get('/confirmation')
-router.post('/login', userController.login)
-router.post('/logout', userController.logout)
+router.get('/', userController.checkForEmailConfirmation, userController.home)
+router.post('/register', userController.checkForEmailConfirmation, userController.register, mailController.sendConfirmationEmail)
+router.get('/confirm/:confirmToken')
+router.post('/login', userController.checkForEmailConfirmation, userController.login)
+router.post('/logout', userController.checkForEmailConfirmation, userController.logout)
 
 //post related routes
-router.get('/create-post', userController.mustBeLoggedIn, postController.viewCreateScreen)
-router.post('/create-post', userController.mustBeLoggedIn, postController.create)
-router.get('/post/:id', postController.viewSingle)
-router.get('/post/:id/edit', userController.mustBeLoggedIn, postController.viewEditScreen)
-router.post('/post/:id/edit', userController.mustBeLoggedIn, postController.edit)
-router.post('/post/:id/delete', userController.mustBeLoggedIn, postController.delete)
-router.post('/search', postController.search)
+router.get('/create-post', userController.checkForEmailConfirmation, userController.mustBeLoggedIn, postController.viewCreateScreen)
+router.post('/create-post', userController.checkForEmailConfirmation, userController.mustBeLoggedIn, postController.create)
+router.get('/post/:id', userController.checkForEmailConfirmation, postController.viewSingle)
+router.get('/post/:id/edit', userController.checkForEmailConfirmation, userController.mustBeLoggedIn, postController.viewEditScreen)
+router.post('/post/:id/edit', userController.checkForEmailConfirmation, userController.mustBeLoggedIn, postController.edit)
+router.post('/post/:id/delete', userController.checkForEmailConfirmation, userController.mustBeLoggedIn, postController.delete)
+router.post('/search', userController.checkForEmailConfirmation, postController.search)
 
 //profile related routes
-router.get('/profile/:username', userController.ifUserExists, userController.sharedProfileData, userController.profilePostsScreen)
-router.get('/profile/:username/followers', userController.ifUserExists, userController.sharedProfileData, userController.profileFollowersScreen)
-router.get('/profile/:username/following', userController.ifUserExists, userController.sharedProfileData, userController.profileFollowingScreen)
+router.get('/profile/:username', userController.checkForEmailConfirmation, userController.ifUserExists, userController.sharedProfileData, userController.profilePostsScreen)
+router.get('/profile/:username/followers', userController.checkForEmailConfirmation, userController.ifUserExists, userController.sharedProfileData, userController.profileFollowersScreen)
+router.get('/profile/:username/following', userController.checkForEmailConfirmation, userController.ifUserExists, userController.sharedProfileData, userController.profileFollowingScreen)
 
 //follow related routes
-router.post('/addFollow/:username', userController.mustBeLoggedIn, followController.addFollow)
-router.post('/removeFollow/:username', userController.mustBeLoggedIn, followController.removeFollow)
+router.post('/addFollow/:username', userController.checkForEmailConfirmation, userController.mustBeLoggedIn, followController.addFollow)
+router.post('/removeFollow/:username', userController.checkForEmailConfirmation, userController.mustBeLoggedIn, followController.removeFollow)
 
 module.exports = router

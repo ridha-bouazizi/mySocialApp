@@ -37,7 +37,10 @@ exports.mustBeLoggedIn = function (req, res, next) {
 exports.login = function (req, res) {
     let user = new User(req.body)
     user.login().then(function (result) {
-        req.session.user = { avatar: user.avatar, username: user.data.username, _id: user.data._id }
+        req.session.user = { avatar: user.avatar, username: user.data.username, _id: user.data._id, email: user.data.email, confirmationRequired: user.data.confirmationRequired }
+        if (user.data.confirmationRequired) {
+            req.flash("errors", "Please consider confirming your email address.")
+        }
         req.session.save(function () {
             res.redirect('/')
         })
@@ -79,11 +82,22 @@ exports.home = async function (req, res) {
         // fetch feed of posts for current user
         let posts = await Post.getFeed(req.session.user._id)
         res.render('home-dashboard', { posts: posts })
-
     } else {
         res.render('home-guest', { regErrors: req.flash('regErrors') })
     }
 }
+
+exports.checkForEmailConfirmation = function (req, res, next) {
+    if (req.session.user.confirmationRequired) {
+        req.flash("errors", "Please consider confirming your email address.")
+        req.session.save(function () {
+            res.render('confirmation_code', { email: req.session.user.email })
+        })
+    } else {
+        next()
+    }
+}
+
 
 exports.ifUserExists = function (req, res, next) {
     User.findByUsername(req.params.username).then(function (userDocument) {

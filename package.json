@@ -5,7 +5,8 @@
   "main": "mySocialApp.js",
   "scripts": {
     "watch": "start nodemon db.js --ignore frontend-js --ignore public/ && start webpack --watch",
-    "debug": "start nodemon db.js --ignore frontend-js --ignore public/",
+    "debug": "nodemon --inspect db.js  --ignore frontend-js --ignore public/",
+    "webpack": "webpack --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -28,11 +29,13 @@
     "express-openid-connect": "^2.0.0",
     "express-session": "^1.17.1",
     "mailgen": "^2.0.14",
+    "mailgun-js": "^0.22.0",
     "marked": "^1.2.0",
     "md5": "^2.3.0",
     "mongodb": "^3.6.2",
     "nodemailer": "^6.4.14",
     "nodemon": "^2.0.4",
+    "notifyjs": "^3.0.0",
     "sanitize-html": "^2.1.0",
     "validator": "^13.1.17",
     "webpack": "^5.1.3",

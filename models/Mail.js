@@ -1,6 +1,7 @@
 const session = require('express-session')
 const nodemailer = require('nodemailer')
 const Mailgen = require('mailgen');
+const mailgun = require("mailgun-js")
 const dotenv = require('dotenv')
 dotenv.config()
 
@@ -50,7 +51,7 @@ Mail.prototype.prepareEmail = function (username, id, operation) {
                     button: {
                         color: '#22BC66', // Optional action button color
                         text: 'Confirm your account',
-                        link: process.env.APP_PATH.concat('confirm/', id)
+                        link: process.env.APP_DOMAIN.concat('confirm/', id)
                     }
                 },
                 outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'
@@ -72,6 +73,16 @@ Mail.prototype.prepareEmail = function (username, id, operation) {
 }
 
 Mail.prototype.sendEmail = function (mail) {
+    /* const mg = mailgun({ apiKey: process.env.API_KEY, domain: process.env.API_BASE_URL });
+    const data = {
+        from: 'r08041994b@gmail.com',
+        to: 'mail.recepAddress',
+        subject: 'Please confirm your account.',
+        text: 'Testing some Mailgun awesomness!'
+    };
+    mg.messages().send(data, function (error, body) {
+        console.log(body);
+    }); */
     const message = {
         from: 'r08041994b@gmail.com',
         to: mail.recepAddress,
