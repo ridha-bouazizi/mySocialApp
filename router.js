@@ -20,7 +20,7 @@ router.get('/post/:id', userController.checkForEmailConfirmation, postController
 router.get('/post/:id/edit', userController.checkForEmailConfirmation, userController.mustBeLoggedIn, postController.viewEditScreen)
 router.post('/post/:id/edit', userController.checkForEmailConfirmation, userController.mustBeLoggedIn, postController.edit)
 router.post('/post/:id/delete', userController.checkForEmailConfirmation, userController.mustBeLoggedIn, postController.delete)
-router.post('/search', userController.checkForEmailConfirmation, postController.search)
+router.post('/search', postController.search)
 
 //profile related routes
 router.get('/profile/:username', userController.checkForEmailConfirmation, userController.ifUserExists, userController.sharedProfileData, userController.profilePostsScreen)
