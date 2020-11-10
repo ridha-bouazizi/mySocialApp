@@ -41,7 +41,7 @@ export default class Search {
       clearTimeout(this.typingWaitTimer)
       this.showLoaderIcon()
       this.hideResultsArea()
-      this.typingWaitTimer = setTimeout(() => this.sendRequest(), 750)
+      this.typingWaitTimer = setTimeout(() => this.sendRequest(), 500)
     }
 
     this.previousValue = value
@@ -49,18 +49,46 @@ export default class Search {
 
   sendRequest() {
     axios.post('/search', { searchTerm: this.inputField.value }).then(response => {
-      console.log(response.data)
-      this.renderResultsHTML(response.data)
+      //console.log(response.data)
+      this.renderResultsHTML(response.data.posts, response.data.users)
     }).catch(() => {
       alert("failed request")
     })
   }
 
-  renderResultsHTML(posts) {
-    if (posts.length) {
+  renderResultsHTML(posts, users) {
+    //console.log(results.posts)
+    if (posts.length || users.length) {
+      let postsList = `<div class="list-group shadow-sm">
+      <div class="list-group-item active"><strong>Search Results for posts :</strong> (${posts.length > 1 ? `${posts.length} items found.` : `${posts.length} item found.`})</div>
+      ${posts.map(post => {
+        let postDate = new Date(post.createdDate)
+        return `
+          <a href="/post/${post._id}" class="list-group-item list-group-item-action">
+            <img class="avatar-tiny" src="${post.author.avatar}"> <strong>${post.title}</strong>
+            <span class="text-muted small"> by ${post.author.username} on ${postDate.getMonth()}/${postDate.getDate()}/${postDate.getFullYear()}</span>
+          </a>`
+      }).join('')}
+    </div>`
+      let usersList = `<div class="list-group shadow-sm">
+      <div class="list-group-item active"><strong>Search Results for users :</strong> (${users.length > 1 ? `${users.length} items found.` : `${users.length} item found.`})</div>
+      ${users.map(user => {
+        return `
+          <a href="/profile/${user.username}" class="list-group-item list-group-item-action">
+            <img class="avatar-tiny" src="${user.avatar}"> <strong>${user.username}</strong>
+            <span class="text-muted small"></span>
+          </a>`
+      }).join('')}
+    </div>`
+      this.resultsArea.innerHTML = DOMPurify.sanitize(postsList + usersList)
+    } else {
+      this.resultsArea.innerHTML = `<p class="alert alert-danger text-center shadow-sm">Sorry, no results found for this search.</p>`
+    }
+
+    /* if (posts.length) {
       this.resultsArea.innerHTML = DOMPurify.sanitize(
         `<div class="list-group shadow-sm">
-      <div class="list-group-item active"><strong>Search Results</strong> (${posts.length > 1 ? `${posts.length} items found.` : `1 item found.`})</div>
+      <div class="list-group-item active"><strong>Search Results for posts :</strong> (${posts.length > 1 ? `${posts.length} items found.` : `1 item found.`})</div>
       ${posts.map(post => {
           let postDate = new Date(post.createdDate)
           return `
@@ -73,7 +101,7 @@ export default class Search {
       )
     } else {
       this.resultsArea.innerHTML = `<p class="alert alert-danger text-center shadow-sm">Sorry, no results found for this search.</p>`
-    }
+    } */
     this.hideLoaderIcon()
     this.showResultsArea()
   }

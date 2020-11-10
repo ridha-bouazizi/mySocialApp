@@ -4,6 +4,7 @@ const userController = require('./controllers/userController')
 const postController = require('./controllers/postController')
 const followController = require('./controllers/followController')
 const mailController = require('./controllers/mailController')
+const searchController = require('./controllers/searchController')
 
 //user related routes
 router.get('/', userController.home)
@@ -20,7 +21,7 @@ router.get('/post/:id', userController.checkForEmailConfirmation, postController
 router.get('/post/:id/edit', userController.checkForEmailConfirmation, userController.mustBeLoggedIn, postController.viewEditScreen)
 router.post('/post/:id/edit', userController.checkForEmailConfirmation, userController.mustBeLoggedIn, postController.edit)
 router.post('/post/:id/delete', userController.checkForEmailConfirmation, userController.mustBeLoggedIn, postController.delete)
-router.post('/search', postController.search)
+router.post('/search', userController.checkForEmailConfirmation, searchController.search)
 
 //profile related routes
 router.get('/profile/:username', userController.checkForEmailConfirmation, userController.ifUserExists, userController.sharedProfileData, userController.profilePostsScreen)
