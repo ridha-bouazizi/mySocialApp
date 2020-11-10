@@ -94,8 +94,6 @@ Mail.prototype.sendEmail = function (mail) {
         text: mail.emailText
     };
 
-    console.log(message)
-
     mail.transport.sendMail(message, function (err, info) {
         if (err) {
             console.log(err)

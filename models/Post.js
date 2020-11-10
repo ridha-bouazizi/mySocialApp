@@ -120,7 +120,6 @@ Post.reusablePostQuery = function (uniqueOperations, visitorId) {
                 },
             },
         ]);
-        console.log(aggOperations);
         let posts = await postsCollection.aggregate(aggOperations).toArray();
         if (posts) {
             // clean up author property in each post object
@@ -153,7 +152,6 @@ Post.findSingleById = function (id, visitorId) {
         );
 
         if (posts.length) {
-            console.log(posts[0]);
             resolve(posts[0]);
         } else {
             reject();

@@ -116,12 +116,10 @@ exports.tryConfirm = function (req, res) {
     user.confirmEmail(decrypt(hash)).then(() => {
         req.flash("success", "Congratulations, you have just confirmed your email.")
         res.redirect('/')
-        console.log("validation successful")
     }
     ).catch(() => {
         req.flash("errors", "Sorry, we were unable to confirm your account.")
         res.redirect('/')
-        console.log("validation successful")
     }
     )
 }

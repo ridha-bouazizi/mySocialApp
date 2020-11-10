@@ -49,7 +49,6 @@ export default class Search {
 
   sendRequest() {
     axios.post('/search', { searchTerm: this.inputField.value }).then(response => {
-      //console.log(response.data)
       this.renderResultsHTML(response.data.posts, response.data.users)
     }).catch(() => {
       alert("failed request")
@@ -57,7 +56,6 @@ export default class Search {
   }
 
   renderResultsHTML(posts, users) {
-    //console.log(results.posts)
     if (posts.length || users.length) {
       let postsList = `<div class="list-group shadow-sm">
       <div class="list-group-item active"><strong>Search Results for posts :</strong> (${posts.length > 1 ? `${posts.length} items found.` : `${posts.length} item found.`})</div>

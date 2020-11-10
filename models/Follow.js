@@ -11,7 +11,6 @@ let Follow = function (followedUsername, authorId) {
 }
 
 Follow.prototype.cleanUp = function () {
-    console.log(typeof (this.followedUsername))
     if (typeof (this.followedUsername) != "string") { this.followedUsername = "" }
 }
 
