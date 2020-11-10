@@ -96,13 +96,19 @@ exports.home = async function (req, res) {
 }
 
 exports.checkForEmailConfirmation = function (req, res, next) {
-    if (req.session.user.confirmationRequired) {
-        req.flash("errors", "Please consider confirming your email address.")
-        req.session.save(function () {
-            res.render('confirmation_code', { email: req.session.user.email })
-        })
-    } else {
-        next()
+    if (req.session.user) {
+        if (req.session.user.confirmationRequired) {
+            req.flash("errors", "Please consider confirming your email address.")
+            req.session.save(function () {
+                res.render('confirmation_code', { email: req.session.user.email })
+            })
+        } else {
+            next()
+        }
+    }
+    else {
+        req.flash("errors", "Please login to your account.")
+        res.redirect('/')
     }
 }
 
